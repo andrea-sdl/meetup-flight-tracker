@@ -1,0 +1,17 @@
+{
+  "name": "flight-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "main": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amadeus": "^8.0.0",
+    "axios": "^1.3.4",
+    "dotenv": "^16.0.3"
+  }
+}
