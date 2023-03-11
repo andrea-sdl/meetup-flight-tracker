@@ -14,7 +14,7 @@ After you have your API keys, place them in the `.env` file (see the `.env.examp
 
 ## How to run
 
-In the `origins.txt` file place the list of source airports (list the same code more than once if you have multiple people departing from the same airport)
+In the `origins.txt` file place the airports codes for the origin airports (list the same code more than once if you have multiple people departing from the same airport).
 
 After you installed the dependencies (`npm install`) you can do a search with
 
