@@ -18,7 +18,7 @@ In the `origins.txt` file place the airports codes for the origin airports (list
 
 After you installed the dependencies (`npm install`) you can do a search with
 
-`npm run main ./origins.txt "DESTINATION" "DEPARTURE-DATE" "RETURN-DATE"`
+`npm run main ./origins.txt ./destinations.txt "DEPARTURE-DATE" "RETURN-DATE"`
 
 example:
-`npm run main ./origins.txt "NYC" "2023-04-01" "2023-04-10"`
+`npm run main ./origins.txt ./destinations.txt "2023-04-01" "2023-04-10"`
