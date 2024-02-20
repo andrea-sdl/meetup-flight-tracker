@@ -27,6 +27,9 @@ async function getAirfarePrice(origin, destination, pricesCache) {
   console.log(
     `Checking prices from ${origin} to ${destination}`
   );
+  if(origin == destination){
+      return 0; //if origin and location are the same we can skip the check and return $0
+  } 
   try {
     const response = await amadeus.shopping.flightOffersSearch.get({
       originLocationCode: origin,
@@ -78,7 +81,7 @@ async function main() {
   }
 
   // Prepare CSV output
-  let csv = 'Origin/Destination,' + destinations.join(',');
+  let csv = 'Origin/Destination,' + destinations.join(',') + '';
   const totals = new Array(destinations.length).fill(0);
   let totalSum = 0;
 
@@ -94,7 +97,7 @@ async function main() {
       if (price > 0) count++;
     });
 
-    const average = count > 0 ? sum / count : 0;
+    csv += `${row}\n`;
   }
 
 
