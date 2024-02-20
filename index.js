@@ -81,7 +81,7 @@ async function main() {
   }
 
   // Prepare CSV output
-  let csv = 'Origin/Destination,' + destinations.join(',') + '';
+  let csv = 'Origin/Destination,' + destinations.join(',') + '\n';
   const totals = new Array(destinations.length).fill(0);
   let totalSum = 0;
 
