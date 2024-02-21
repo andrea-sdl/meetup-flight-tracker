@@ -11,6 +11,7 @@ const ORIGINS_FILE = process.argv[2]; // Get path to file containing origin airp
 const DESTINATIONS_FILE = process.argv[3]; // Get destination airport code from command-line arguments
 const DEPARTURE_DATE = process.argv[4]; // Get departure date from command-line arguments
 const RETURN_DATE = process.argv[5]; // Get return date from command-line arguments
+const OUTPUT_FILE = process.argv[6]; // Get location for output csv
 const amadeus = new Amadeus({
   clientId: process.env.AMADEUS_API_KEY,
   clientSecret: process.env.AMADEUS_API_SECRET,
@@ -38,13 +39,13 @@ async function getAirfarePrice(origin, destination, pricesCache) {
       returnDate: RETURN_DATE,
       adults: 1,
       currencyCode: "USD",
-      max: 1, // Only fetch the cheapest flight
+      max: 3, 
     });
     if (response?.data && response.data.length > 0) {
       const price = response.data[0].price.total;
-   //   console.log(
-   //     `Airfare price from ${origin} to ${destination} on ${DEPARTURE_DATE} - ${RETURN_DATE}: $${price}`
-   //   );
+      console.log(
+         `Airfare price from ${origin} to ${destination} on ${DEPARTURE_DATE} - ${RETURN_DATE}: $${price}`
+      );
       pricesCache[cacheKey] = price;
       return price;
     }
@@ -102,7 +103,7 @@ async function main() {
 
 
   // Write CSV to file
-  fs.writeFileSync('prices.csv', csv);
+  fs.writeFileSync(OUTPUT_FILE+'.csv', csv);
   console.log('Airfare prices have been written to prices.csv');
 }
 
