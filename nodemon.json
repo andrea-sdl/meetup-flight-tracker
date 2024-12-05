@@ -1,0 +1,17 @@
+{
+	"verbose": true,
+	"ignore": [
+		"cache/*",
+		"*.test.js",
+		"*.json",
+		"public/*"
+	],
+	"events": {
+		"crash": "echo 'Application crashed - waiting for changes before restarting...'"
+	},
+	"delay": "1500",
+	"restartable": "rs",
+	"env": {
+		"NODE_ENV": "development"
+	}
+} 
