@@ -64,7 +64,8 @@ function updateResultsTable(results, averages) {
 async function loadSearchHistory() {
 	try {
 		const response = await fetch('/history');
-		const history = await response.json();
+		const historyData = await response.json();
+		const history = historyData.history;
 		
 		const historyTableElement = document.getElementById('historyTable');
 		if (!historyTableElement) return;
