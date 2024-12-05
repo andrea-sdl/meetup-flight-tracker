@@ -39,12 +39,14 @@ async function getAirfarePrice(origin, destination, pricesCache) {
       returnDate: RETURN_DATE,
       adults: 1,
       currencyCode: "USD",
-      max: 3, 
+      max: 2, 
     });
     if (response?.data && response.data.length > 0) {
       const price = response.data[0].price.total;
+      const numFlights = response.data[0].itineraries[0].segments.length;
+      const flighttime = response.data[0].itineraries[0].duration;
       console.log(
-         `Airfare price from ${origin} to ${destination} on ${DEPARTURE_DATE} - ${RETURN_DATE}: $${price}`
+         `Airfare price from ${origin} to ${destination} on ${DEPARTURE_DATE} - ${RETURN_DATE}: $${price} with ${numFlights} Flights. Travel time: ${flighttime}`
       );
       pricesCache[cacheKey] = price;
       return price;
@@ -68,17 +70,21 @@ async function main() {
     results[destination] = {};
   }
 
-  const rl = readline.createInterface({
-    input: fs.createReadStream(ORIGINS_FILE),
-    crlfDelay: Infinity,
-  });
+  const origins = fs.readFileSync(ORIGINS_FILE, "utf8").split("\n").map(d => d.trim()).filter(d => d);
 
-  for await (const origin of rl) {
-    const originTrimmed = origin.trim();
-    for (const destination of destinations) {
-      const price = await getAirfarePrice(originTrimmed, destination, pricesCache);
-      results[destination][originTrimmed] = price;
+
+  for await (const destination of destinations) {
+    let totalPrice = 0;
+    let corigins = 0;
+    let averagePrice = 0;
+    for (const origin of origins) {
+      corigins++;
+      const price = await getAirfarePrice(origin, destination, pricesCache);
+      totalPrice += parseFloat(price);
+      averagePrice = totalPrice / corigins;
+      results[destination][origin] = price;
     }
+    console.log(`Current average is $${averagePrice} for ${corigins} flights to ${destination}`);
   }
 
   // Prepare CSV output
@@ -103,8 +109,8 @@ async function main() {
 
 
   // Write CSV to file
-  fs.writeFileSync(OUTPUT_FILE+'.csv', csv);
-  console.log('Airfare prices have been written to prices.csv');
+  fs.writeFileSync(OUTPUT_FILE, csv);
+  console.log(`Airfare prices have been written to ${OUTPUT_FILE}`);
 }
 
 main();
