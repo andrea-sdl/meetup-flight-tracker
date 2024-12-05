@@ -13,12 +13,5 @@ This requires a valid Amadeus API set of keys.
 After you have your API keys, place them in the `.env` file (see the `.env.example` for the keys)
 
 ## How to run
+Execute `npm run dev` and go to localhost:3000 in your browser
 
-In the `origins.txt` file place the airports codes for the origin airports (list the same code more than once if you have multiple people departing from the same airport).
-
-After you installed the dependencies (`npm install`) you can do a search with
-
-`npm run main ./origins.txt ./destinations.txt "DEPARTURE-DATE" "RETURN-DATE"`
-
-example:
-`npm run main ./origins.txt ./destinations.txt "2023-04-01" "2023-04-10"`
