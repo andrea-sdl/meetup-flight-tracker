@@ -1,6 +1,18 @@
 let statusEventSource = null;
 let abortController = null;
 
+function toFixed2 ( value ) {
+	if ( typeof value === 'string' ) {
+		return new Number( value ).toFixed( 2 );
+	} else if ( typeof value === 'number' ) {
+		return value.toFixed( 2 );
+	}
+	console.error( 'toFixed2: Invalid value type', value );
+	// print the caller function for better debugging
+	console.trace();
+	return 'N/A';
+}
+
 // Utility Functions
 function updateResultsTable(results, averages) {
 	const origins = Object.values(results)[0] ? Object.keys(Object.values(results)[0]) : [];
@@ -26,7 +38,7 @@ function updateResultsTable(results, averages) {
 					return `
 						<td class="text-center">
 							${result.price ? `
-								$${result.price.toFixed(2)}<br>
+								$${toFixed2(result.price)}<br>
 								<small>Flights: ${result.numFlights}<br>
 								Duration: ${result.flighttime || 'N/A'}</small>
 							` : '<span class="text-muted">No flight available</span>'}
@@ -42,7 +54,7 @@ function updateResultsTable(results, averages) {
 			<td><strong>Average</strong></td>
 			${destinations.map(dest => `
 				<td class="text-center">
-					<strong>$${averages[dest].price.toFixed(2)}</strong><br>
+					<strong>$${toFixed2(averages[dest].price)}</strong><br>
 					<small>Avg Duration: ${averages[dest].duration || 'N/A'}</small>
 				</td>
 			`).join('')}
@@ -398,7 +410,7 @@ async function exportSearchResultToExcel(searchId) {
 			const row = [origin];
 			Object.keys(data.results).forEach(dest => {
 				const result = data.results[dest][origin];
-				row.push(result.price ? `$${result.price.toFixed(2)}\nFlights: ${result.numFlights}\nDuration: ${result.flighttime || 'N/A'}` : 'No flight available');
+				row.push(result.price ? `$${toFixed2(result.price)}\nFlights: ${result.numFlights}\nDuration: ${result.flighttime || 'N/A'}` : 'No flight available');
 			});
 			wsData.push(row);
 		});
@@ -407,7 +419,7 @@ async function exportSearchResultToExcel(searchId) {
 		const averagesRow = ['Average'];
 		Object.keys(data.averages).forEach(dest => {
 			const avg = data.averages[dest];
-			averagesRow.push(`$${avg.price.toFixed(2)}\nAvg Duration: ${avg.duration || 'N/A'}`);
+			averagesRow.push(`$${toFixed2(avg.price)}\nAvg Duration: ${avg.duration || 'N/A'}`);
 		});
 		wsData.push(averagesRow);
 
