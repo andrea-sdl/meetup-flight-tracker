@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Price Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Flight Price Search</h1>
+        <div id="loadingMessage" class="loading-message">
+            <span class="loading-spinner"></span>
+            Loading airport data...
+        </div>
+        <form id="searchForm" style="display: none;">
+            <div class="form-group">
+                <label for="tripName">Trip Name (optional):</label>
+                <input type="text" id="tripName" class="form-control" placeholder="Enter a name for this search">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="originInput">Origins:</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="originInput" class="form-control" placeholder="Search for airports...">
+                        <div id="originSuggestions" class="suggestions-container"></div>
+                        <div id="originBadges" class="badges-container"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="destinationInput">Destinations:</label>
+                    <div class="autocomplete-container">
+                        <input type="text" id="destinationInput" class="form-control" placeholder="Search for airports...">
+                        <div id="destinationSuggestions" class="suggestions-container"></div>
+                        <div id="destinationBadges" class="badges-container"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departureDate">Departure Date:</label>
+                    <input type="date" id="departureDate" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="returnDate">Return Date:</label>
+                    <input type="date" id="returnDate" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" id="searchButton" class="btn btn-primary">
+                    <span class="loading-spinner" style="display: none;"></span>
+                    Search Flights
+                </button>
+                <button type="button" id="stopButton" class="btn btn-danger" style="display: none;">Stop Search</button>
+            </div>
+        </form>
+
+        <div id="progressContainer" class="progress-container">
+            <div class="progress-status" id="searchStatus"></div>
+            <div class="progress">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <div class="progress-text" id="progressText"></div>
+        </div>
+
+        <div id="resultsContainer" class="results-container">
+            <div id="resultsTable"></div>
+        </div>
+
+        <div id="searchHistory">
+            <h2>Search History</h2>
+            <div class="history-container">
+                <div id="historyTable"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show form when airports are loaded
+        window.addEventListener('airportsLoaded', () => {
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('searchForm').style.display = 'block';
+        });
+    </script>
+    <script src="/airports.js"></script>
+    <script src="/script.js"></script>
+</body>
+</html>
