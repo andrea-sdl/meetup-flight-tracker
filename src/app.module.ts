@@ -1,23 +1,17 @@
 import { Module } from '@nestjs/common';
-import { FlightsController } from './flights/flights.controller';
-import { FlightsService } from './flights/flights.service';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './flights/flights.controller';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { FlightsModule } from './flights/flights.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
+    ConfigModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+      exclude: ['/api*'],
     }),
-  ],
-  controllers: [FlightsController],
-  providers: [
-    FlightsService,
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
+    FlightsModule,
   ],
 })
 export class AppModule {}
