@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Flight Price Search</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+	<div class="container mt-5">
+		<h1>Flight Price Search</h1>
+		<form id="flightSearchForm">
+			<div class="row">
+				<div class="col-md-12 mb-3">
+					<div class="form-group">
+						<label for="tripName">Trip Name (optional):</label>
+						<input type="text" class="form-control" id="tripName" placeholder="e.g., Summer Vacation 2024">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="originTextarea">Origins (one per line):</label>
+						<textarea class="form-control" id="originTextarea" rows="5" required></textarea>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="destinationTextarea">Destinations (one per line):</label>
+						<textarea class="form-control" id="destinationTextarea" rows="5" required></textarea>
+					</div>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="departureDate">Departure Date:</label>
+						<input type="date" class="form-control" id="departureDate" required>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="returnDate">Return Date:</label>
+						<input type="date" class="form-control" id="returnDate">
+					</div>
+				</div>
+			</div>
+			<div class="mt-3">
+				<button type="submit" class="btn btn-primary">Search Flights</button>
+				<button id="stopSearchButton" class="btn btn-danger" style="display: none;">Stop Search</button>
+				<div id="loadingIndicator" class="spinner-border text-primary" role="status" style="display: none;">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+				<div id="statusMessage" class="mt-2"></div>
+				<div id="progressContainer" class="mt-2" style="display: none;">
+					<div class="progress">
+						<div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+							 role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" 
+							 style="width: 0%">
+							0%
+						</div>
+					</div>
+					<small id="progressText" class="text-muted"></small>
+				</div>
+			</div>
+		</form>
+
+		<div id="resultsTable"></div>
+
+		<div class="mt-4">
+			<h3>Search History</h3>
+			<div id="historyTable"></div>
+		</div>
+	</div>
+
+	<script src="js/app.js"></script>
+</body>
+</html>
