@@ -56,7 +56,7 @@ app.post('/search', async (req, res) => {
                     
                     results[destination][origin] = result;
                     if (result.price) {
-                        totalPrice += result.price;
+                        totalPrice += (Number(result.price) || 0); // Convert to number and add to total price if result.price;
                         validPrices++;
                     }
 
@@ -77,6 +77,7 @@ app.post('/search', async (req, res) => {
                 price: validPrices > 0 ? totalPrice / validPrices : 0,
                 duration: calculateAverageDuration(results[destination]) // Ensure this returns a valid value
             };
+            console.log(averages)
         }
 
         // Notify clients that the search is completed
