@@ -203,10 +203,6 @@ function initializeApp() {
             searchStatus.textContent = 'Search completed!';
             progressText.textContent = '100% complete';
             
-            // Clear inputs
-            originAutocomplete.clear();
-            destinationAutocomplete.clear();
-            
             // Hide progress after a delay
             setTimeout(() => {
                 progressContainer.style.display = 'none';
