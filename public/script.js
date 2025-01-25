@@ -297,44 +297,100 @@ function saveToHistory(searchData) {
 
 function loadSearchHistory() {
     const historyTable = document.getElementById('historyTable');
-    const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    const savedHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
-    if (history.length === 0) {
-        historyTable.innerHTML = '<p>No search history available</p>';
-        return;
-    }
-
-    let tableHTML = `
-        <table class="history-table">
-            <tr>
-                <th>Trip Name</th>
-                <th>Date</th>
-                <th>Origins</th>
-                <th>Destinations</th>
-                <th>Travel Dates</th>
-                <th>Actions</th>
-            </tr>
+    // Clear existing history rows
+    historyTable.innerHTML = `
+        <tr>
+            <th>Trip Name</th>
+            <th>Origins</th>
+            <th>Destinations</th>
+            <th>Travel Dates</th>
+            <th>Date Searched</th>
+            <th>Actions</th>
+        </tr>
     `;
 
-    history.forEach((item, index) => {
-        const date = new Date(item.date).toLocaleString();
-        tableHTML += `
-            <tr>
-                <td>${item.tripName || 'Unnamed'}</td>
-                <td>${date}</td>
-                <td>${item.origins}</td>
-                <td>${item.destinations}</td>
-                <td>${item.travelDates}</td>
-                <td>
-                    <button onclick="viewResults(${index})" class="btn btn-sm btn-primary">View</button>
-                    <button onclick="exportToExcel(${index})" class="btn btn-sm btn-success">Export</button>
-                </td>
-            </tr>
+    savedHistory.reverse().forEach((search, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${search.tripName}</td>
+            <td>${search.origins}</td>
+            <td>${search.destinations}</td>
+            <td>${search.travelDates}</td>
+            <td>${new Date(search.date).toLocaleString()}</td>
+            <td>
+                <button class="view-results" data-index="${index}">View Results</button>
+                <button class="reuse-search" data-index="${index}">Reuse Search</button>
+            </td>
         `;
-    });
 
-    tableHTML += '</table>';
-    historyTable.innerHTML = tableHTML;
+        // Add event listener for View Results
+        row.querySelector('.view-results').addEventListener('click', () => viewResults(savedHistory.length - 1 - index));
+
+        // Add event listener for Reuse Search
+        row.querySelector('.reuse-search').addEventListener('click', () => {
+            // Clear existing selections and inputs
+            selectedOrigins.clear();
+            selectedDestinations.clear();
+            document.getElementById('originBadges').innerHTML = '';
+            document.getElementById('destinationBadges').innerHTML = '';
+            
+            // Repopulate trip name
+            document.getElementById('tripName').value = search.tripName;
+
+            // Repopulate origins
+            const originCodes = search.origins.split(', ');
+            originCodes.forEach(code => {
+                const airport = window.airports.find(a => a.code === code);
+                if (airport) {
+                    selectedOrigins.add(code);
+                    const badge = document.createElement('div');
+                    badge.className = 'badge';
+                    badge.innerHTML = `
+                        ${airport.code} - ${airport.city}
+                        <button type="button" class="remove-badge" aria-label="Remove ${airport.code}">&times;</button>
+                    `;
+                    
+                    badge.querySelector('.remove-badge').addEventListener('click', () => {
+                        selectedOrigins.delete(airport.code);
+                        badge.remove();
+                    });
+                    
+                    document.getElementById('originBadges').appendChild(badge);
+                }
+            });
+
+            // Repopulate destinations
+            const destinationCodes = search.destinations.split(', ');
+            destinationCodes.forEach(code => {
+                const airport = window.airports.find(a => a.code === code);
+                if (airport) {
+                    selectedDestinations.add(code);
+                    const badge = document.createElement('div');
+                    badge.className = 'badge';
+                    badge.innerHTML = `
+                        ${airport.code} - ${airport.city}
+                        <button type="button" class="remove-badge" aria-label="Remove ${airport.code}">&times;</button>
+                    `;
+                    
+                    badge.querySelector('.remove-badge').addEventListener('click', () => {
+                        selectedDestinations.delete(airport.code);
+                        badge.remove();
+                    });
+                    
+                    document.getElementById('destinationBadges').appendChild(badge);
+                }
+            });
+
+            // Repopulate travel dates
+            const [departureDate, returnDate] = search.travelDates.split(' - ');
+            document.getElementById('departureDate').value = departureDate;
+            document.getElementById('returnDate').value = returnDate;
+        });
+
+        historyTable.appendChild(row);
+    });
 }
 
 function viewResults(index) {
