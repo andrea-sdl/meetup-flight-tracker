@@ -150,7 +150,7 @@ function initializeApp() {
         resultsContainer.style.display = 'none';
         progressBar.style.width = '0%';
         progressBar.style.backgroundColor = '#4285f4';
-        searchStatus.textContent = 'Initializing search...';
+        searchStatus.textContent = 'Performing search...';
         progressText.textContent = '';
 
         const totalSearches = origins.length * destinations.length;
@@ -172,6 +172,7 @@ function initializeApp() {
             });
 
             if (!response.ok) {
+                searchStatus.textContent = response.statusText;
                 throw new Error(response.statusText);
             }
 
@@ -299,6 +300,12 @@ function loadSearchHistory() {
     const historyTable = document.getElementById('historyTable');
     const savedHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
+
+    if (savedHistory.length === 0) {
+        historyTable.innerHTML = '<p>No search history available</p>';
+        return;
+    }
+
     // Clear existing history rows
     historyTable.innerHTML = `
         <tr>
@@ -320,8 +327,8 @@ function loadSearchHistory() {
             <td>${search.travelDates}</td>
             <td>${new Date(search.date).toLocaleString()}</td>
             <td>
-                <button class="view-results" data-index="${index}">View Results</button>
-                <button class="reuse-search" data-index="${index}">Reuse Search</button>
+                <button class="view-results btn btn-sm btn-primary" data-index="${index}">View Results</button>
+                <button class="reuse-search btn btn-sm btn-info" data-index="${index}">Reuse Search</button>
             </td>
         `;
 
